@@ -1,0 +1,102 @@
+---
+title: "Nairaland"
+description: "We aggregate and structure content from Nigeria's most popular forum, Nairaland"
+icon: "naira-sign"
+---
+
+We index and structure all public posts and comments from Nairaland, Nigeria's largest and most active discussion forum. Available data includes:
+
+For Threads:
+
+- <span className="font-bold">Title</span> – The main post topic
+- <span className="font-bold">Content</span> – The content of the first post
+- <span className="font-bold">Author</span> – Username of the poster
+- <span className="font-bold">Category/Subforum</span> – e.g., Politics, Crime, Education
+- <span className="font-bold">Timestamp</span> – ISO timestamp
+- <span className="font-bold">Replies Count</span> – Number of responses
+- <span className="font-bold">Likes Count</span> – Number of likes
+
+For Comments:
+
+- <span className="font-bold">Comment Text</span> – The content of the comment
+- <span className="font-bold">Author</span> – Username of the commenter
+- <span className="font-bold">Timestamp</span> – ISO timestamp
+- <span className="font-bold">Likes Count</span> – Number of likes
+
+### Retrieve Nairaland Posts
+
+Retrieve a specific post from Nairaland by its ID.
+
+<Tabs>
+  <Tab title="Curl">
+    ```curl
+      curl -X GET -H "ally-api-key: your_api_key" -H "Content-Type: application/json" -H "Accept: application/json" "https://api.ally.ng/services/nairaland/1234567890"
+    ```
+  </Tab>
+  <Tab title="Python">
+    ```python
+      import requests
+
+      headers = {
+        "Content-Type": "application/json",
+        "Accept": "application/json",
+        "ally-api-key": "your_api_key"
+      }
+      response = requests.get("https://api.ally.ng/services/nairaland/1234567890", headers=headers)
+      print(response.json())
+    ```
+
+  </Tab>
+  <Tab title="JavaScript">
+    ```javascript
+      const response = await fetch("https://api.ally.ng/services/nairaland/1234567890", {
+        headers: {
+          "Content-Type": "application/json",
+          "Accept": "application/json",
+          "ally-api-key": "your_api_key"
+        }
+      });
+      const data = await response.json();
+      console.log(data);
+    ```
+  </Tab>
+</Tabs>
+
+### Get Nairaland Post's Comments
+
+Retrieve all comments for a specific Nairaland post by its ID.
+
+<Tabs>
+  <Tab title="Curl">
+    ```curl
+      curl -X GET -H "ally-api-key: your_api_key" -H "Content-Type: application/json" -H "Accept: application/json" "https://api.ally.ng/services/nairaland/1234567890/comments"
+    ```
+  </Tab>
+  <Tab title="Python">
+    ```python
+      import requests
+
+      headers = {
+        "Content-Type": "application/json",
+        "Accept": "application/json",
+        "ally-api-key": "your_api_key"
+      }
+      response = requests.get("https://api.ally.ng/services/nairaland/1234567890/comments", headers=headers)
+      print(response.json())
+    ```
+
+  </Tab>
+  <Tab title="JavaScript">
+    ```javascript
+      const response = await fetch("https://api.ally.ng/services/nairaland/1234567890/comments", {
+        headers: {
+          "Content-Type": "application/json",
+          "Accept": "application/json",
+          "ally-api-key": "your_api_key"
+        }
+      });
+      const data = await response.json();
+      console.log(data);
+    ```
+  </Tab>
+</Tabs>

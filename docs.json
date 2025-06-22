@@ -3,33 +3,29 @@
   "theme": "mint",
   "name": "Mint Starter Kit",
   "colors": {
-    "primary": "#16A34A",
-    "light": "#07C983",
-    "dark": "#15803D"
+    "primary": "#FF3115",
+    "light": "#FF3115",
+    "dark": "#FF3115"
   },
   "favicon": "/favicon.svg",
   "navigation": {
     "tabs": [
       {
-        "tab": "Guides",
+        "tab": "Documentation",
         "groups": [
           {
             "group": "Get Started",
             "pages": [
               "index",
               "quickstart",
-              "development"
+              "data"
             ]
           },
           {
-            "group": "Essentials",
+            "group": "Data Sources",
             "pages": [
-              "essentials/markdown",
-              "essentials/code",
-              "essentials/images",
-              "essentials/settings",
-              "essentials/navigation",
-              "essentials/reusable-snippets"
+              "essentials/media",
+              "essentials/nairaland"
             ]
           }
         ]
@@ -38,18 +34,26 @@
         "tab": "API Reference",
         "groups": [
           {
-            "group": "API Documentation",
+            "group": "Prerequisites",
             "pages": [
               "api-reference/introduction"
             ]
           },
           {
-            "group": "Endpoint Examples",
+            "group": "Media Endpoints",
             "pages": [
-              "api-reference/endpoint/get",
-              "api-reference/endpoint/create",
-              "api-reference/endpoint/delete",
-              "api-reference/endpoint/webhook"
+              "api-reference/endpoint/recent_news",
+              "api-reference/endpoint/recent_clustered_news",
+              "api-reference/endpoint/get_news_cluster",
+              "api-reference/endpoint/search_news",
+              "api-reference/endpoint/cluster_summary"
+            ]
+          },
+          {
+            "group": "Nairaland Endpoints",
+            "pages": [
+              "api-reference/endpoint/nairaland_post",
+              "api-reference/endpoint/nairaland_comment"
             ]
           }
         ]
@@ -58,19 +62,9 @@
     "global": {
       "anchors": [
         {
-          "anchor": "Documentation",
-          "href": "https://mintlify.com/docs",
-          "icon": "book-open-cover"
-        },
-        {
-          "anchor": "Community",
-          "href": "https://mintlify.com/community",
-          "icon": "slack"
-        },
-        {
-          "anchor": "Blog",
-          "href": "https://mintlify.com/blog",
-          "icon": "newspaper"
+          "anchor": "X (Twitter)",
+          "href": "https://x.com/solacebase_ng",
+          "icon": "x-twitter"
         }
       ]
     }

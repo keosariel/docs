@@ -1,72 +1,63 @@
 {
   "openapi": "3.1.0",
   "info": {
-    "title": "OpenAPI Plant Store",
-    "description": "A sample API that uses a plant store as an example to demonstrate features in the OpenAPI specification",
-    "license": {
-      "name": "MIT"
-    },
-    "version": "1.0.0"
+    "title": "Ally API",
+    "version": "0.1.0"
   },
-  "servers": [
-    {
-      "url": "http://sandbox.mintlify.com"
-    }
-  ],
-  "security": [
-    {
-      "bearerAuth": []
-    }
-  ],
   "paths": {
-    "/plants": {
-      "get": {
-        "description": "Returns all plants from the system that the user has access to",
-        "parameters": [
-          {
-            "name": "limit",
-            "in": "query",
-            "description": "The maximum number of results to return",
-            "schema": {
-              "type": "integer",
-              "format": "int32"
-            }
-          }
+    "/auth/register": {
+      "post": {
+        "tags": [
+          "auth"
         ],
+        "summary": "Register User",
+        "operationId": "register_user_auth_register_post",
+        "requestBody": {
+          "content": {
+            "application/json": {
+              "schema": {
+                "$ref": "#/components/schemas/UserCreate"
+              }
+            }
+          },
+          "required": true
+        },
         "responses": {
-          "200": {
-            "description": "Plant response",
+          "201": {
+            "description": "Successful Response",
             "content": {
               "application/json": {
                 "schema": {
-                  "type": "array",
-                  "items": {
-                    "$ref": "#/components/schemas/Plant"
-                  }
+                  "$ref": "#/components/schemas/Token"
                 }
               }
             }
           },
-          "400": {
-            "description": "Unexpected error",
+          "422": {
+            "description": "Validation Error",
             "content": {
               "application/json": {
                 "schema": {
-                  "$ref": "#/components/schemas/Error"
+                  "$ref": "#/components/schemas/HTTPValidationError"
                 }
               }
             }
           }
         }
-      },
+      }
+    },
+    "/auth/login": {
       "post": {
-        "description": "Creates a new plant in the store",
+        "tags": [
+          "auth"
+        ],
+        "summary": "Login User",
+        "operationId": "login_user_auth_login_post",
         "requestBody": {
-          "description": "Plant to add to the store",
           "content": {
-            "application/json": {
+            "application/x-www-form-urlencoded": {
               "schema": {
-                "$ref": "#/components/schemas/NewPlant"
+                "$ref": "#/components/schemas/Body_login_user_auth_login_post"
               }
             }
           },
@@ -74,21 +65,21 @@
         },
         "responses": {
           "200": {
-            "description": "plant response",
+            "description": "Successful Response",
             "content": {
               "application/json": {
                 "schema": {
-                  "$ref": "#/components/schemas/Plant"
+                  "$ref": "#/components/schemas/Token"
                 }
               }
             }
           },
-          "400": {
-            "description": "unexpected error",
+          "422": {
+            "description": "Validation Error",
             "content": {
               "application/json": {
                 "schema": {
-                  "$ref": "#/components/schemas/Error"
+                  "$ref": "#/components/schemas/HTTPValidationError"
                 }
               }
             }
@@ -96,57 +87,519 @@
         }
       }
     },
-    "/plants/{id}": {
-      "delete": {
-        "description": "Deletes a single plant based on the ID supplied",
+    "/user/": {
+      "get": {
+        "tags": [
+          "user"
+        ],
+        "summary": "Get User",
+        "operationId": "get_user_user__get",
+        "responses": {
+          "200": {
+            "description": "Successful Response",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/UserResponse"
+                }
+              }
+            }
+          }
+        },
+        "security": [
+          {
+            "OAuth2PasswordBearer": []
+          }
+        ]
+      }
+    },
+    "/services/media": {
+      "get": {
+        "tags": [
+          "services"
+        ],
+        "summary": "Recent News",
+        "description": "Retrieve recently published news articles\n\nReturns a list of recently published news articles, only\narticles in a cluster (i.e cid is not `None` / `null`) would have `content` and `metadata`\nfields populated.",
+        "operationId": "recent_news_services_media_get",
         "parameters": [
           {
-            "name": "id",
-            "in": "path",
-            "description": "ID of plant to delete",
-            "required": true,
+            "name": "page",
+            "in": "query",
+            "required": false,
             "schema": {
               "type": "integer",
-              "format": "int64"
+              "minimum": 1,
+              "description": "The page number to retrieve",
+              "default": 1,
+              "title": "Page"
+            },
+            "description": "The page number to retrieve"
+          },
+          {
+            "name": "per_page",
+            "in": "query",
+            "required": false,
+            "schema": {
+              "type": "integer",
+              "maximum": 30,
+              "minimum": 1,
+              "description": "The number of items to retrieve per page",
+              "default": 10,
+              "title": "Per Page"
+            },
+            "description": "The number of items to retrieve per page"
+          },
+          {
+            "name": "ally-api-key",
+            "in": "header",
+            "required": true,
+            "schema": {
+              "type": "string",
+              "title": "Ally-Api-Key"
             }
           }
         ],
         "responses": {
-          "204": {
-            "description": "Plant deleted",
-            "content": {}
-          },
-          "400": {
-            "description": "unexpected error",
+          "200": {
+            "description": "Successful Response",
             "content": {
               "application/json": {
                 "schema": {
-                  "$ref": "#/components/schemas/Error"
+                  "type": "array",
+                  "items": {
+                    "$ref": "#/components/schemas/FeedModel"
+                  },
+                  "title": "Response Recent News Services Media Get"
+                }
+              }
+            }
+          },
+          "422": {
+            "description": "Validation Error",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/HTTPValidationError"
                 }
               }
             }
           }
         }
       }
-    }
-  },
-  "webhooks": {
-    "/plant/webhook": {
-      "post": {
-        "description": "Information about a new plant added to the store",
-        "requestBody": {
-          "description": "Plant added to the store",
-          "content": {
-            "application/json": {
-              "schema": {
-                "$ref": "#/components/schemas/NewPlant"
+    },
+    "/services/media/search": {
+      "get": {
+        "tags": [
+          "services"
+        ],
+        "summary": "Search Media",
+        "description": "Query all news articles that match the search query\n\nAll results are strictly based on the `title` field and \nare sorted by relevance to the query.",
+        "operationId": "search_media_services_media_search_get",
+        "parameters": [
+          {
+            "name": "query",
+            "in": "query",
+            "required": true,
+            "schema": {
+              "type": "string",
+              "description": "Search query",
+              "title": "Query"
+            },
+            "description": "Search query"
+          },
+          {
+            "name": "page",
+            "in": "query",
+            "required": false,
+            "schema": {
+              "type": "integer",
+              "minimum": 1,
+              "description": "The page number to retrieve",
+              "default": 1,
+              "title": "Page"
+            },
+            "description": "The page number to retrieve"
+          },
+          {
+            "name": "per_page",
+            "in": "query",
+            "required": false,
+            "schema": {
+              "type": "integer",
+              "maximum": 30,
+              "minimum": 1,
+              "description": "The number of items to retrieve per page",
+              "default": 10,
+              "title": "Per Page"
+            },
+            "description": "The number of items to retrieve per page"
+          },
+          {
+            "name": "ally-api-key",
+            "in": "header",
+            "required": true,
+            "schema": {
+              "type": "string",
+              "title": "Ally-Api-Key"
+            }
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "Successful Response",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "type": "array",
+                  "items": {
+                    "$ref": "#/components/schemas/FeedModel"
+                  },
+                  "title": "Response Search Media Services Media Search Get"
+                }
+              }
+            }
+          },
+          "422": {
+            "description": "Validation Error",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/HTTPValidationError"
+                }
               }
             }
           }
-        },
+        }
+      }
+    },
+    "/services/media/clusters/{cid}": {
+      "get": {
+        "tags": [
+          "services"
+        ],
+        "summary": "Single Cluster",
+        "description": "Retrieve a single cluster details.\n\nNote: all clusters would have the `summary` & `tldr` fields\npopulated, as they are generated on demand i.e (cached when the summary is requested).\n\nIt is important to note that the titles of any given cluster is AI generated,\nand as such, it might not always describe the event in the cluster accurately.",
+        "operationId": "single_cluster_services_media_clusters__cid__get",
+        "parameters": [
+          {
+            "name": "cid",
+            "in": "path",
+            "required": true,
+            "schema": {
+              "type": "string",
+              "description": "Cluster ID",
+              "title": "Cid"
+            },
+            "description": "Cluster ID"
+          },
+          {
+            "name": "ally-api-key",
+            "in": "header",
+            "required": true,
+            "schema": {
+              "type": "string",
+              "title": "Ally-Api-Key"
+            }
+          }
+        ],
         "responses": {
           "200": {
-            "description": "Return a 200 status to indicate that the data was received successfully"
+            "description": "Successful Response",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ClusterModel"
+                }
+              }
+            }
+          },
+          "422": {
+            "description": "Validation Error",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/HTTPValidationError"
+                }
+              }
+            }
+          }
+        }
+      }
+    },
+    "/services/media/clusters/{cid}/summary": {
+      "get": {
+        "tags": [
+          "services"
+        ],
+        "summary": "Cluster Summary",
+        "description": "Retrieve the summary of a cluster.\n\nThis endpoint is used to generate a summary of a cluster. This summary\nis cached and would be served from cache if available. It is strictly\nbased on the `summary` & `content` fields of the cluster's feeds.",
+        "operationId": "cluster_summary_services_media_clusters__cid__summary_get",
+        "parameters": [
+          {
+            "name": "cid",
+            "in": "path",
+            "required": true,
+            "schema": {
+              "type": "string",
+              "description": "Cluster ID",
+              "title": "Cid"
+            },
+            "description": "Cluster ID"
+          },
+          {
+            "name": "ally-api-key",
+            "in": "header",
+            "required": true,
+            "schema": {
+              "type": "string",
+              "title": "Ally-Api-Key"
+            }
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "Successful Response",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "type": "object",
+                  "title": "Response Cluster Summary Services Media Clusters  Cid  Summary Get"
+                }
+              }
+            }
+          },
+          "422": {
+            "description": "Validation Error",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/HTTPValidationError"
+                }
+              }
+            }
+          }
+        }
+      }
+    },
+    "/services/media/clusters": {
+      "get": {
+        "tags": [
+          "services"
+        ],
+        "summary": "Recent Clusters",
+        "description": "Retrieve recently clustered news articles.\n\nThis endpoint is used to retrieve recently clustered news articles.\nIt is important to note that the titles of any given cluster is AI generated,\nand as such, it might not always describe the event in the cluster accurately.\n\nAll the feeds in the cluster are assumed to be related to the same event,\nand as such, the `summary` & `tldr` fields are generated based on the\nassumption that all the feeds are related to the same event.",
+        "operationId": "recent_clusters_services_media_clusters_get",
+        "parameters": [
+          {
+            "name": "category",
+            "in": "query",
+            "required": false,
+            "schema": {
+              "type": "string",
+              "description": "Category",
+              "title": "Category"
+            },
+            "description": "Category"
+          },
+          {
+            "name": "feed_limit",
+            "in": "query",
+            "required": false,
+            "schema": {
+              "type": "integer",
+              "maximum": 5,
+              "minimum": 1,
+              "description": "The minimum number of feeds each cluster should have",
+              "default": 3,
+              "title": "Feed Limit"
+            },
+            "description": "The minimum number of feeds each cluster should have"
+          },
+          {
+            "name": "page",
+            "in": "query",
+            "required": false,
+            "schema": {
+              "type": "integer",
+              "minimum": 1,
+              "description": "The page number to retrieve",
+              "default": 1,
+              "title": "Page"
+            },
+            "description": "The page number to retrieve"
+          },
+          {
+            "name": "per_page",
+            "in": "query",
+            "required": false,
+            "schema": {
+              "type": "integer",
+              "maximum": 30,
+              "minimum": 1,
+              "description": "The number of items to retrieve per page",
+              "default": 10,
+              "title": "Per Page"
+            },
+            "description": "The number of items to retrieve per page"
+          },
+          {
+            "name": "ally-api-key",
+            "in": "header",
+            "required": true,
+            "schema": {
+              "type": "string",
+              "title": "Ally-Api-Key"
+            }
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "Successful Response",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "type": "array",
+                  "items": {
+                    "$ref": "#/components/schemas/ClusterModel"
+                  },
+                  "title": "Response Recent Clusters Services Media Clusters Get"
+                }
+              }
+            }
+          },
+          "422": {
+            "description": "Validation Error",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/HTTPValidationError"
+                }
+              }
+            }
+          }
+        }
+      }
+    },
+    "/services/nairaland/{post_id}": {
+      "get": {
+        "tags": [
+          "services"
+        ],
+        "summary": "Nairaland Post",
+        "description": "Retrieve a Nairaland post data.\n\nThis endpoint is used to retrieve a Nairaland post cached data if available. \nIf the post is not found, the endpoint would return a 404 error.",
+        "operationId": "nairaland_post_services_nairaland__post_id__get",
+        "parameters": [
+          {
+            "name": "post_id",
+            "in": "path",
+            "required": true,
+            "schema": {
+              "type": "integer",
+              "description": "Nairaland Post ID",
+              "title": "Post Id"
+            },
+            "description": "Nairaland Post ID"
+          },
+          {
+            "name": "ally-api-key",
+            "in": "header",
+            "required": true,
+            "schema": {
+              "type": "string",
+              "title": "Ally-Api-Key"
+            }
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "Successful Response",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/NairalandPostModel"
+                }
+              }
+            }
+          },
+          "422": {
+            "description": "Validation Error",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/HTTPValidationError"
+                }
+              }
+            }
+          }
+        }
+      }
+    },
+    "/services/nairaland/{post_id}/comments": {
+      "get": {
+        "tags": [
+          "services"
+        ],
+        "summary": "Nairaland Post",
+        "description": "Retrieve the comments of a Nairaland post.\n\nNote: the comments are cached and would be served from cache if available. Also \nthe comments are sorted by the `timestamp` field in descending order. Comments are nested\nif there are replies to a comment, the replies would be in the `replies` field.\n\nThis endpoint is used to retrieve the comments of a Nairaland post.\nIf the post is not found, it returns an empty list.",
+        "operationId": "nairaland_post_services_nairaland__post_id__comments_get",
+        "parameters": [
+          {
+            "name": "post_id",
+            "in": "path",
+            "required": true,
+            "schema": {
+              "type": "integer",
+              "description": "Nairaland Post ID",
+              "title": "Post Id"
+            },
+            "description": "Nairaland Post ID"
+          },
+          {
+            "name": "ally-api-key",
+            "in": "header",
+            "required": true,
+            "schema": {
+              "type": "string",
+              "title": "Ally-Api-Key"
+            }
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "Successful Response",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/NairalandCommentModel"
+                }
+              }
+            }
+          },
+          "422": {
+            "description": "Validation Error",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/HTTPValidationError"
+                }
+              }
+            }
+          }
+        }
+      }
+    },
+    "/health": {
+      "get": {
+        "summary": "Health Check",
+        "operationId": "health_check_health_get",
+        "responses": {
+          "200": {
+            "description": "Successful Response",
+            "content": {
+              "application/json": {
+                "schema": {}
+              }
+            }
           }
         }
       }
@@ -154,63 +607,574 @@
   },
   "components": {
     "schemas": {
-      "Plant": {
-        "required": [
-          "name"
-        ],
+      "Body_login_user_auth_login_post": {
+        "properties": {
+          "grant_type": {
+            "anyOf": [
+              {
+                "type": "string",
+                "pattern": "^password$"
+              },
+              {
+                "type": "null"
+              }
+            ],
+            "title": "Grant Type"
+          },
+          "username": {
+            "type": "string",
+            "title": "Username"
+          },
+          "password": {
+            "type": "string",
+            "title": "Password"
+          },
+          "scope": {
+            "type": "string",
+            "title": "Scope",
+            "default": ""
+          },
+          "client_id": {
+            "anyOf": [
+              {
+                "type": "string"
+              },
+              {
+                "type": "null"
+              }
+            ],
+            "title": "Client Id"
+          },
+          "client_secret": {
+            "anyOf": [
+              {
+                "type": "string"
+              },
+              {
+                "type": "null"
+              }
+            ],
+            "title": "Client Secret"
+          }
+        },
         "type": "object",
+        "required": [
+          "username",
+          "password"
+        ],
+        "title": "Body_login_user_auth_login_post"
+      },
+      "ClusterModel": {
+        "properties": {
+          "cid": {
+            "type": "string",
+            "title": "Cid",
+            "description": "The cluster id"
+          },
+          "title": {
+            "type": "string",
+            "title": "Title",
+            "description": "The title of the cluster (generated by AI)"
+          },
+          "tldr": {
+            "type": "string",
+            "title": "Tldr",
+            "description": "The tldr of the cluster (generated by AI)"
+          },
+          "created_at": {
+            "anyOf": [
+              {
+                "type": "string"
+              },
+              {
+                "type": "string",
+                "format": "date-time"
+              }
+            ],
+            "title": "Created At",
+            "description": "The time the cluster was created"
+          },
+          "summary": {
+            "anyOf": [
+              {
+                "type": "string"
+              },
+              {
+                "type": "null"
+              }
+            ],
+            "title": "Summary",
+            "description": "The summary of the cluster (generated by AI)"
+          },
+          "feed": {
+            "items": {
+              "$ref": "#/components/schemas/FeedModel"
+            },
+            "type": "array",
+            "title": "Feed",
+            "description": "The list of posts in the cluster"
+          }
+        },
+        "type": "object",
+        "required": [
+          "cid",
+          "title",
+          "tldr",
+          "created_at",
+          "feed"
+        ],
+        "title": "ClusterModel"
+      },
+      "FeedModel": {
+        "properties": {
+          "title": {
+            "type": "string",
+            "title": "Title",
+            "description": "The title of the post"
+          },
+          "link": {
+            "type": "string",
+            "title": "Link",
+            "description": "The link to the post"
+          },
+          "cid": {
+            "anyOf": [
+              {
+                "type": "string"
+              },
+              {
+                "type": "null"
+              }
+            ],
+            "title": "Cid",
+            "description": "The cluster id of the post"
+          },
+          "summary": {
+            "anyOf": [
+              {
+                "type": "string"
+              },
+              {
+                "type": "null"
+              }
+            ],
+            "title": "Summary",
+            "description": "The summary of the post"
+          },
+          "content": {
+            "anyOf": [
+              {
+                "type": "string"
+              },
+              {
+                "type": "null"
+              }
+            ],
+            "title": "Content",
+            "description": "The content of the post. Only available if the post is in a cluster. This can also be considered as an extension of the `summary` field."
+          },
+          "published": {
+            "anyOf": [
+              {
+                "type": "string"
+              },
+              {
+                "type": "string",
+                "format": "date-time"
+              }
+            ],
+            "title": "Published",
+            "description": "The time the post was published"
+          },
+          "source": {
+            "$ref": "#/components/schemas/SourceModel",
+            "description": "The source metadata of the post"
+          },
+          "metadata": {
+            "anyOf": [
+              {
+                "$ref": "#/components/schemas/MetadataModel"
+              },
+              {
+                "type": "null"
+              }
+            ]
+          }
+        },
+        "type": "object",
+        "required": [
+          "title",
+          "link",
+          "published",
+          "source"
+        ],
+        "title": "FeedModel"
+      },
+      "HTTPValidationError": {
+        "properties": {
+          "detail": {
+            "items": {
+              "$ref": "#/components/schemas/ValidationError"
+            },
+            "type": "array",
+            "title": "Detail"
+          }
+        },
+        "type": "object",
+        "title": "HTTPValidationError"
+      },
+      "MetadataModel": {
+        "properties": {
+          "image": {
+            "anyOf": [
+              {
+                "type": "string"
+              },
+              {
+                "type": "null"
+              }
+            ],
+            "title": "Image",
+            "description": "The image of the post"
+          },
+          "author": {
+            "anyOf": [
+              {
+                "type": "string"
+              },
+              {
+                "type": "null"
+              }
+            ],
+            "title": "Author",
+            "description": "The author of the post"
+          },
+          "published_time": {
+            "anyOf": [
+              {
+                "type": "string"
+              },
+              {
+                "type": "null"
+              }
+            ],
+            "title": "Published Time",
+            "description": "The time the post was published"
+          },
+          "type": {
+            "anyOf": [
+              {
+                "type": "string"
+              },
+              {
+                "type": "null"
+              }
+            ],
+            "title": "Type",
+            "description": "The type of the post"
+          }
+        },
+        "type": "object",
+        "title": "MetadataModel"
+      },
+      "NairalandCommentModel": {
+        "properties": {
+          "author": {
+            "anyOf": [
+              {
+                "type": "string"
+              },
+              {
+                "type": "null"
+              }
+            ],
+            "title": "Author",
+            "description": "The author of the comment"
+          },
+          "timestamp": {
+            "anyOf": [
+              {
+                "type": "string"
+              },
+              {
+                "type": "string",
+                "format": "date-time"
+              }
+            ],
+            "title": "Timestamp",
+            "description": "The time the comment was published"
+          },
+          "content": {
+            "type": "string",
+            "title": "Content",
+            "description": "The content of the comment"
+          },
+          "comment_id": {
+            "type": "integer",
+            "title": "Comment Id",
+            "description": "The comment id"
+          },
+          "post_id": {
+            "type": "integer",
+            "title": "Post Id",
+            "description": "The post id"
+          },
+          "like_count": {
+            "type": "integer",
+            "title": "Like Count",
+            "description": "The number of likes the comment has",
+            "default": 0
+          },
+          "share_count": {
+            "type": "integer",
+            "title": "Share Count",
+            "description": "The number of shares the comment has",
+            "default": 0
+          },
+          "attachments": {
+            "items": {
+              "type": "string"
+            },
+            "type": "array",
+            "title": "Attachments",
+            "description": "The list of attachments of the comment"
+          },
+          "replies": {
+            "items": {
+              "$ref": "#/components/schemas/NairalandCommentModel"
+            },
+            "type": "array",
+            "title": "Replies",
+            "description": "The list of replies to the comment"
+          }
+        },
+        "type": "object",
+        "required": [
+          "timestamp",
+          "content",
+          "comment_id",
+          "post_id"
+        ],
+        "title": "NairalandCommentModel"
+      },
+      "NairalandPostModel": {
+        "properties": {
+          "title": {
+            "type": "string",
+            "title": "Title",
+            "description": "The title of the post"
+          },
+          "attachments": {
+            "items": {
+              "type": "string"
+            },
+            "type": "array",
+            "title": "Attachments",
+            "description": "The list of attachments of the post"
+          },
+          "content": {
+            "type": "string",
+            "title": "Content",
+            "description": "The content of the post"
+          },
+          "author": {
+            "type": "string",
+            "title": "Author",
+            "description": "The author of the post"
+          },
+          "like_count": {
+            "type": "integer",
+            "title": "Like Count",
+            "description": "The number of likes the post has"
+          },
+          "share_count": {
+            "type": "integer",
+            "title": "Share Count",
+            "description": "The number of shares the post has"
+          },
+          "timestamp": {
+            "anyOf": [
+              {
+                "type": "string"
+              },
+              {
+                "type": "string",
+                "format": "date-time"
+              }
+            ],
+            "title": "Timestamp",
+            "description": "The time the post was published"
+          },
+          "category": {
+            "type": "string",
+            "title": "Category",
+            "description": "The category of the post"
+          },
+          "page_views": {
+            "type": "string",
+            "title": "Page Views",
+            "description": "The number of page views the post has"
+          },
+          "comments_count": {
+            "type": "integer",
+            "title": "Comments Count",
+            "description": "The number of comments the post has"
+          }
+        },
+        "type": "object",
+        "required": [
+          "title",
+          "attachments",
+          "content",
+          "author",
+          "like_count",
+          "share_count",
+          "timestamp",
+          "category",
+          "page_views",
+          "comments_count"
+        ],
+        "title": "NairalandPostModel"
+      },
+      "SourceModel": {
         "properties": {
           "name": {
-            "description": "The name of the plant",
-            "type": "string"
+            "type": "string",
+            "title": "Name",
+            "description": "The name of the source"
           },
-          "tag": {
-            "description": "Tag to specify the type",
-            "type": "string"
-          }
-        }
-      },
-      "NewPlant": {
-        "allOf": [
-          {
-            "$ref": "#/components/schemas/Plant"
+          "logo": {
+            "type": "string",
+            "title": "Logo",
+            "description": "The logo (favicon) of the source"
           },
-          {
-            "required": [
-              "id"
-            ],
-            "type": "object",
-            "properties": {
-              "id": {
-                "description": "Identification number of the plant",
-                "type": "integer",
-                "format": "int64"
-              }
-            }
+          "twitter": {
+            "type": "string",
+            "title": "Twitter",
+            "description": "The twitter handle of the source (if available)"
           }
-        ]
-      },
-      "Error": {
-        "required": [
-          "error",
-          "message"
-        ],
+        },
         "type": "object",
+        "required": [
+          "name",
+          "logo",
+          "twitter"
+        ],
+        "title": "SourceModel"
+      },
+      "Token": {
         "properties": {
-          "error": {
-            "type": "integer",
-            "format": "int32"
+          "access_token": {
+            "type": "string",
+            "title": "Access Token"
           },
-          "message": {
-            "type": "string"
+          "token_type": {
+            "type": "string",
+            "title": "Token Type"
           }
-        }
+        },
+        "type": "object",
+        "required": [
+          "access_token",
+          "token_type"
+        ],
+        "title": "Token"
+      },
+      "UserCreate": {
+        "properties": {
+          "full_name": {
+            "type": "string",
+            "maxLength": 100,
+            "minLength": 3,
+            "title": "Full Name"
+          },
+          "email": {
+            "type": "string",
+            "format": "email",
+            "title": "Email"
+          },
+          "password": {
+            "type": "string",
+            "maxLength": 100,
+            "minLength": 8,
+            "title": "Password"
+          }
+        },
+        "type": "object",
+        "required": [
+          "full_name",
+          "email",
+          "password"
+        ],
+        "title": "UserCreate"
+      },
+      "UserResponse": {
+        "properties": {
+          "full_name": {
+            "type": "string",
+            "title": "Full Name"
+          },
+          "email": {
+            "type": "string",
+            "format": "email",
+            "title": "Email"
+          },
+          "api_key": {
+            "type": "string",
+            "title": "Api Key"
+          }
+        },
+        "type": "object",
+        "required": [
+          "full_name",
+          "email",
+          "api_key"
+        ],
+        "title": "UserResponse"
+      },
+      "ValidationError": {
+        "properties": {
+          "loc": {
+            "items": {
+              "anyOf": [
+                {
+                  "type": "string"
+                },
+                {
+                  "type": "integer"
+                }
+              ]
+            },
+            "type": "array",
+            "title": "Location"
+          },
+          "msg": {
+            "type": "string",
+            "title": "Message"
+          },
+          "type": {
+            "type": "string",
+            "title": "Error Type"
+          }
+        },
+        "type": "object",
+        "required": [
+          "loc",
+          "msg",
+          "type"
+        ],
+        "title": "ValidationError"
       }
     },
     "securitySchemes": {
-      "bearerAuth": {
-        "type": "http",
-        "scheme": "bearer"
+      "OAuth2PasswordBearer": {
+        "type": "oauth2",
+        "flows": {
+          "password": {
+            "scopes": {},
+            "tokenUrl": "login"
+          }
+        }
       }
     }
   }

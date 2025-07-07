@@ -1,7 +1,7 @@
 {
   "$schema": "https://mintlify.com/docs.json",
-  "theme": "mint",
-  "name": "Mint Starter Kit",
+  "theme": "willow",
+  "name": "Ally Documentation",
   "colors": {
     "primary": "#FF3115",
     "light": "#FF3115",
@@ -46,7 +46,9 @@
               "api-reference/endpoint/recent_clustered_news",
               "api-reference/endpoint/get_news_cluster",
               "api-reference/endpoint/search_news",
-              "api-reference/endpoint/cluster_summary"
+              "api-reference/endpoint/cluster_summary",
+              "api-reference/endpoint/related_clusters",
+              "api-reference/endpoint/timeline"
             ]
           },
           {

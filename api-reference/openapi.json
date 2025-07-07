@@ -272,115 +272,6 @@
         }
       }
     },
-    "/services/media/clusters/{cid}": {
-      "get": {
-        "tags": [
-          "services"
-        ],
-        "summary": "Single Cluster",
-        "description": "Retrieve a single cluster details.\n\nNote: all clusters would have the `summary` & `tldr` fields\npopulated, as they are generated on demand i.e (cached when the summary is requested).\n\nIt is important to note that the titles of any given cluster is AI generated,\nand as such, it might not always describe the event in the cluster accurately.",
-        "operationId": "single_cluster_services_media_clusters__cid__get",
-        "parameters": [
-          {
-            "name": "cid",
-            "in": "path",
-            "required": true,
-            "schema": {
-              "type": "string",
-              "description": "Cluster ID",
-              "title": "Cid"
-            },
-            "description": "Cluster ID"
-          },
-          {
-            "name": "ally-api-key",
-            "in": "header",
-            "required": true,
-            "schema": {
-              "type": "string",
-              "title": "Ally-Api-Key"
-            }
-          }
-        ],
-        "responses": {
-          "200": {
-            "description": "Successful Response",
-            "content": {
-              "application/json": {
-                "schema": {
-                  "$ref": "#/components/schemas/ClusterModel"
-                }
-              }
-            }
-          },
-          "422": {
-            "description": "Validation Error",
-            "content": {
-              "application/json": {
-                "schema": {
-                  "$ref": "#/components/schemas/HTTPValidationError"
-                }
-              }
-            }
-          }
-        }
-      }
-    },
-    "/services/media/clusters/{cid}/summary": {
-      "get": {
-        "tags": [
-          "services"
-        ],
-        "summary": "Cluster Summary",
-        "description": "Retrieve the summary of a cluster.\n\nThis endpoint is used to generate a summary of a cluster. This summary\nis cached and would be served from cache if available. It is strictly\nbased on the `summary` & `content` fields of the cluster's feeds.",
-        "operationId": "cluster_summary_services_media_clusters__cid__summary_get",
-        "parameters": [
-          {
-            "name": "cid",
-            "in": "path",
-            "required": true,
-            "schema": {
-              "type": "string",
-              "description": "Cluster ID",
-              "title": "Cid"
-            },
-            "description": "Cluster ID"
-          },
-          {
-            "name": "ally-api-key",
-            "in": "header",
-            "required": true,
-            "schema": {
-              "type": "string",
-              "title": "Ally-Api-Key"
-            }
-          }
-        ],
-        "responses": {
-          "200": {
-            "description": "Successful Response",
-            "content": {
-              "application/json": {
-                "schema": {
-                  "type": "object",
-                  "title": "Response Cluster Summary Services Media Clusters  Cid  Summary Get"
-                }
-              }
-            }
-          },
-          "422": {
-            "description": "Validation Error",
-            "content": {
-              "application/json": {
-                "schema": {
-                  "$ref": "#/components/schemas/HTTPValidationError"
-                }
-              }
-            }
-          }
-        }
-      }
-    },
     "/services/media/clusters": {
       "get": {
         "tags": [
@@ -463,6 +354,276 @@
                     "$ref": "#/components/schemas/ClusterModel"
                   },
                   "title": "Response Recent Clusters Services Media Clusters Get"
+                }
+              }
+            }
+          },
+          "422": {
+            "description": "Validation Error",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/HTTPValidationError"
+                }
+              }
+            }
+          }
+        }
+      }
+    },
+    "/services/media/clusters/{cid}": {
+      "get": {
+        "tags": [
+          "services"
+        ],
+        "summary": "Single Cluster",
+        "description": "Retrieve a single cluster details.\n\nNote: all clusters would have the `summary` & `tldr` fields\npopulated, as they are generated on demand i.e (cached when the summary is requested).\n\nIt is important to note that the titles of any given cluster is AI generated,\nand as such, it might not always describe the event in the cluster accurately.",
+        "operationId": "single_cluster_services_media_clusters__cid__get",
+        "parameters": [
+          {
+            "name": "cid",
+            "in": "path",
+            "required": true,
+            "schema": {
+              "type": "string",
+              "description": "Cluster ID",
+              "title": "Cid"
+            },
+            "description": "Cluster ID"
+          },
+          {
+            "name": "ally-api-key",
+            "in": "header",
+            "required": true,
+            "schema": {
+              "type": "string",
+              "title": "Ally-Api-Key"
+            }
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "Successful Response",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ClusterModel"
+                }
+              }
+            }
+          },
+          "422": {
+            "description": "Validation Error",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/HTTPValidationError"
+                }
+              }
+            }
+          }
+        }
+      }
+    },
+    "/services/media/clusters/{cid}/related": {
+      "get": {
+        "tags": [
+          "services"
+        ],
+        "summary": "Related Clusters",
+        "description": "Retrieve similar clusters to the given cluster.\n\nThis endpoint is used to retrieve similar clusters to the given cluster.\nIt is important to note that the clusters are cached and would be served from cache if available.",
+        "operationId": "related_clusters_services_media_clusters__cid__related_get",
+        "parameters": [
+          {
+            "name": "cid",
+            "in": "path",
+            "required": true,
+            "schema": {
+              "type": "string",
+              "description": "Cluster ID",
+              "title": "Cid"
+            },
+            "description": "Cluster ID"
+          },
+          {
+            "name": "limit",
+            "in": "query",
+            "required": false,
+            "schema": {
+              "type": "integer",
+              "maximum": 10,
+              "minimum": 1,
+              "description": "The number of similar clusters to retrieve",
+              "default": 4,
+              "title": "Limit"
+            },
+            "description": "The number of similar clusters to retrieve"
+          },
+          {
+            "name": "ally-api-key",
+            "in": "header",
+            "required": true,
+            "schema": {
+              "type": "string",
+              "title": "Ally-Api-Key"
+            }
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "Successful Response",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "type": "array",
+                  "items": {
+                    "$ref": "#/components/schemas/ClusterModel"
+                  },
+                  "title": "Response Related Clusters Services Media Clusters  Cid  Related Get"
+                }
+              }
+            }
+          },
+          "422": {
+            "description": "Validation Error",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/HTTPValidationError"
+                }
+              }
+            }
+          }
+        }
+      }
+    },
+    "/services/media/clusters/{cid}/summary": {
+      "get": {
+        "tags": [
+          "services"
+        ],
+        "summary": "Cluster Summary",
+        "description": "Retrieve the summary of a cluster.\n\nThis endpoint is used to generate a summary of a cluster. This summary\nis cached and would be served from cache if available. It is strictly\nbased on the `summary` & `content` fields of the cluster's feeds.",
+        "operationId": "cluster_summary_services_media_clusters__cid__summary_get",
+        "parameters": [
+          {
+            "name": "cid",
+            "in": "path",
+            "required": true,
+            "schema": {
+              "type": "string",
+              "description": "Cluster ID",
+              "title": "Cid"
+            },
+            "description": "Cluster ID"
+          },
+          {
+            "name": "ally-api-key",
+            "in": "header",
+            "required": true,
+            "schema": {
+              "type": "string",
+              "title": "Ally-Api-Key"
+            }
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "Successful Response",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "type": "object",
+                  "title": "Response Cluster Summary Services Media Clusters  Cid  Summary Get"
+                }
+              }
+            }
+          },
+          "422": {
+            "description": "Validation Error",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/HTTPValidationError"
+                }
+              }
+            }
+          }
+        }
+      }
+    },
+    "/services/media/clusters/timeline": {
+      "post": {
+        "tags": [
+          "services"
+        ],
+        "summary": "Timeline Clusters",
+        "description": "Retrieve all clusters in the timeline.\n\nThis endpoint generates a timeline of clusters based on the cluster IDs\nprovided in the request body. The timeline is generated by finding clusters\nthat are similar to the clusters in the request body.",
+        "operationId": "timeline_clusters_services_media_clusters_timeline_post",
+        "parameters": [
+          {
+            "name": "limit",
+            "in": "query",
+            "required": false,
+            "schema": {
+              "type": "integer",
+              "maximum": 20,
+              "minimum": 1,
+              "description": "The number of clusters to retrieve",
+              "default": 10,
+              "title": "Limit"
+            },
+            "description": "The number of clusters to retrieve"
+          },
+          {
+            "name": "page",
+            "in": "query",
+            "required": false,
+            "schema": {
+              "type": "integer",
+              "minimum": 1,
+              "description": "The page number to retrieve",
+              "default": 1,
+              "title": "Page"
+            },
+            "description": "The page number to retrieve"
+          },
+          {
+            "name": "ally-api-key",
+            "in": "header",
+            "required": true,
+            "schema": {
+              "type": "string",
+              "title": "Ally-Api-Key"
+            }
+          }
+        ],
+        "requestBody": {
+          "required": true,
+          "content": {
+            "application/json": {
+              "schema": {
+                "type": "array",
+                "items": {
+                  "type": "string"
+                },
+                "description": "Cluster IDs that the timeline should be based on (max 30)",
+                "title": "Cids"
+              }
+            }
+          }
+        },
+        "responses": {
+          "200": {
+            "description": "Successful Response",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "type": "array",
+                  "items": {
+                    "$ref": "#/components/schemas/ClusterModel"
+                  },
+                  "title": "Response Timeline Clusters Services Media Clusters Timeline Post"
                 }
               }
             }
@@ -570,7 +731,11 @@
             "content": {
               "application/json": {
                 "schema": {
-                  "$ref": "#/components/schemas/NairalandCommentModel"
+                  "type": "array",
+                  "items": {
+                    "$ref": "#/components/schemas/NairalandCommentModel"
+                  },
+                  "title": "Response Nairaland Post Services Nairaland  Post Id  Comments Get"
                 }
               }
             }
@@ -681,6 +846,11 @@
             "title": "Tldr",
             "description": "The tldr of the cluster (generated by AI)"
           },
+          "category": {
+            "type": "string",
+            "title": "Category",
+            "description": "The category of the cluster"
+          },
           "created_at": {
             "anyOf": [
               {
@@ -720,6 +890,7 @@
           "cid",
           "title",
           "tldr",
+          "category",
           "created_at",
           "feed"
         ],

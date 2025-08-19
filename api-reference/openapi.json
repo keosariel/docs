@@ -456,6 +456,15 @@
             }
           },
           {
+            "name": "comment_id",
+            "in": "query",
+            "required": false,
+            "schema": {
+              "type": "string",
+              "title": "Comment Id"
+            }
+          },
+          {
             "name": "page",
             "in": "query",
             "required": false,
@@ -472,7 +481,7 @@
             "required": false,
             "schema": {
               "type": "integer",
-              "maximum": 15,
+              "maximum": 30,
               "minimum": 1,
               "default": 10,
               "title": "Per Page"

@@ -42,13 +42,12 @@
           {
             "group": "Media Endpoints",
             "pages": [
-              "api-reference/endpoint/recent_news",
               "api-reference/endpoint/recent_clustered_news",
               "api-reference/endpoint/get_news_cluster",
-              "api-reference/endpoint/search_news",
               "api-reference/endpoint/cluster_summary",
               "api-reference/endpoint/related_clusters",
-              "api-reference/endpoint/timeline"
+              "api-reference/endpoint/timeline",
+              "api-reference/endpoint/sources"
             ]
           },
           {
@@ -65,7 +64,7 @@
       "anchors": [
         {
           "anchor": "X (Twitter)",
-          "href": "https://x.com/solacebase_ng",
+          "href": "https://x.com/useAllyNG",
           "icon": "x-twitter"
         }
       ]
@@ -79,20 +78,19 @@
     "links": [
       {
         "label": "Support",
-        "href": "mailto:hi@mintlify.com"
+        "href": "mailto:hi@ally.ng"
       }
     ],
     "primary": {
       "type": "button",
       "label": "Dashboard",
-      "href": "https://dashboard.mintlify.com"
+      "href": "https://ally.ng/dashboard"
     }
   },
   "footer": {
     "socials": {
-      "x": "https://x.com/mintlify",
-      "github": "https://github.com/mintlify",
-      "linkedin": "https://linkedin.com/company/mintlify"
+      "x": "https://x.com/useAllyNG",
+      "github": "https://github.com/allyHQ"
     }
   }
 }

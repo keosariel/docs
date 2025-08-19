@@ -8,7 +8,6 @@ We aggregate and structure content from Nigeria's most trusted news and media pl
 
 - <span className="font-bold">Title</span> - The article title
 - <span className="font-bold">Summary</span> - A concise, AI-generated overview
-- <span className="font-bold">Source</span> - Metadata of the media outlet
 - <span className="font-bold">Category</span> - Politics, Tech, Business, Entertainment,
   etc.
 - <span className="font-bold">Published Date</span> - ISO timestamp
@@ -21,7 +20,7 @@ Use this data to build news feeds, monitor current events, or extract insights f
 <Tabs>
   <Tab title="Curl">
     ```curl
-      curl -X GET -H "ally-api-key: your_api_key" -H "Content-Type: application/json" -H "Accept: application/json" "https://api.ally.ng/services/media/clusters?category=politics&feed_limit=3&page=1&per_page=10"
+      curl -X GET -H "ally-api-key: your_api_key" -H "Content-Type: application/json" -H "Accept: application/json" "https://api.ally.ng/services/feed"
     ```
   </Tab>
   <Tab title="Python">
@@ -33,53 +32,14 @@ Use this data to build news feeds, monitor current events, or extract insights f
         "Accept": "application/json",
         "ally-api-key": "your_api_key"
       }
-      response = requests.get("https://api.ally.ng/services/media/clusters?category=politics&feed_limit=3&page=1&per_page=10", headers=headers)
+      response = requests.get("https://api.ally.ng/services/feed", headers=headers)
       print(response.json())
     ```
 
   </Tab>
   <Tab title="JavaScript">
     ```javascript
-      const response = await fetch("https://api.ally.ng/services/media/clusters?category=politics&feed_limit=3&page=1&per_page=10", {
-        headers: {
-          "Content-Type": "application/json",
-          "Accept": "application/json",
-          "ally-api-key": "your_api_key"
-        }
-      });
-      const data = await response.json();
-      console.log(data);
-    ```
-  </Tab>
-</Tabs>
-
-## Search for Articles
-
-You can search for articles based on the content of the article.
-
-<Tabs>
-  <Tab title="Curl">
-    ```curl
-      curl -X GET -H "ally-api-key: your_api_key" -H "Content-Type: application/json" -H "Accept: application/json" "https://api.ally.ng/services/media/search?query=tinubu"
-    ```
-  </Tab>
-  <Tab title="Python">
-    ```python
-      import requests
-
-      headers = {
-        "Content-Type": "application/json",
-        "Accept": "application/json",
-        "ally-api-key": "your_api_key"
-      }
-      response = requests.get("https://api.ally.ng/services/media/search?query=tinubu", headers=headers)
-      print(response.json())
-    ```
-
-  </Tab>
-  <Tab title="JavaScript">
-    ```javascript
-      const response = await fetch("https://api.ally.ng/services/media/search?query=tinubu", {
+      const response = await fetch("https://api.ally.ng/services/feed", {
         headers: {
           "Content-Type": "application/json",
           "Accept": "application/json",

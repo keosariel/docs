@@ -9,28 +9,38 @@ This page will guide you through how to interact with the ALLY API, what data yo
 
 Ally API uses Bearer Token Authentication to authorize all requests.
 
-To interact with the API, you'll need to include your Secret API Key in the Authorization header of every request. This key is a secure JSON Web Token (JWT) and should be stored safely on your backend — never expose it on the client side.
+To interact with the API, you'll need to include your Secret API Key in the Authorization header of every request. This key should be stored safely on your backend — never expose it on the client side.
 
 **Example:**
 
 <Tabs>
   <Tab title="Curl">
     ```curl
-      curl -X GET "https://api.ally.com/v1/users"
+        curl -H "ally-api-key: your_api_key" -X GET "https://api.ally.ng/services/feed?sourceName=Nairaland"
     ```
   </Tab>
   <Tab title="Python">
     ```python
       import requests
 
-      response = requests.get("https://api.ally.com/v1/users")
+      response = requests.get(
+        "https://api.ally.ng/services/feed?sourceName=Nairaland",
+        headers={"ally-api-key": "your_api_key"}
+      )
       print(response.json())
     ```
 
   </Tab>
   <Tab title="JavaScript">
     ```javascript
-      const response = await fetch("https://api.ally.com/v1/users");
+      const response = await fetch(
+        "https://api.ally.ng/services/feed?sourceName=Nairaland",
+        {
+          headers: {
+            "ally-api-key": "your_api_key",
+          },
+        }
+      );
       const data = await response.json();
       console.log(data);
     ```
@@ -44,12 +54,11 @@ Key Guidelines:
 
 ### Requests
 
-The Ally API accepts both POST and GET requests. To ensure successful communication, all requests must meet the following requirements:
+The Ally API accepts only GET requests. To ensure successful communication, all requests must meet the following requirements:
 
 - The Authorization header must include your Secret API Key as a Bearer token
 - The Content-Type header must be set to application/json
-- The request body (for POST requests) must be valid JSON
 
 ### Rate Limiting
 
-Ally enforces a limit of 60 requests per minute. If you exceed this rate, the API will respond with a `429 Too Many Requests` error. Consider implementing retries with exponential backoff in your integration.
+Ally enforces a limit of 2 requests per second. If you exceed this rate, the API will respond with a `429 Too Many Requests` error. Consider implementing retries with exponential backoff in your integration.
